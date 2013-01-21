@@ -39,7 +39,7 @@ def teardown_request(exception):
 
 @app.route('/')
 def home():
-	# Makes sure user is logged in before writing to db.
+	# Make sure the user is logged in before pulling tasks.
 	if session.get('logged_in'):
 		c = g.db.execute('select id, task from entries order by id desc')
 		entries = [dict(id=row[0], task=row[1]) for row in c.fetchall()]
