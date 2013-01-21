@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Do This</title>
+		<link rel="stylesheet" href="../static/style.css" />
+	</head>
+	<body>
+		<nav>
+			<h2>Do This</h2>
+			
+			{% if session.logged_in %}
+			
+			<!-- Logout -->
+			<form action="{{ url_for('logout') }}">
+				 <input type="submit" value="Logout" class="logbutton">
+			</form>	 
+			
+			{% else %} 
+			
+			<!-- Login -->
+			<form action="{{ url_for('login') }}" method="post">
+				<input type="text" name="username" placeholder="Username">
+				<input type="password" name="password" placeholder="Password">
+				<input type="submit" value="Login" class="logbutton">
+			</form>
+			{% endif %}
+			
+		</nav> <!--- END NAV -->
+		
+		<div class="entries">
+			{% if session.logged_in  %}
+			<ul class="entriesList">
+				<form action="{{ url_for('remove_task') }}" method="post" >
+				{% for entry in entries %}
+					<li>{{ entry.task }}<input type="checkbox" name="id" value="{{ entry.id }}" class="entryform"></li>
+				{% endfor %}
+				<input type="submit" name="Delete" value="Delete" class="delete" >
+				<br/>
+				<hr />
+				</form>
+			</ul>
+			{% endif %}
+			{% if session.logged_in  %}
+			<form action="{{ url_for('add_task') }}" method="post" id="taskform">
+				<section id="tasksection">
+					<input type="text" name="task" placeholder="Task" id="taskinput">
+					<input type="submit" value="Post" id="submitbutton">
+				</section>
+			</form>
+			{% endif %}
+		</div>
+	</body>
+</html>
