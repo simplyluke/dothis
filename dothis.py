@@ -3,18 +3,21 @@ from contextlib import closing
 import sqlite3 # Using sqlite3 as a database
 from flask import Flask, render_template, g, request, flash, redirect, url_for, session, escape
 
-# Configutraion
+# Configutraion - most of this would need to change before being pushed to a server. Going to experiment with moving config to a seperate file soon.
 DATABASE = '/tmp/dothis.db'
-DEBUG = False
+DEBUG = True
 SECRET_KEY = 'dev key'
 USERNAME = 'Admin'
 PASSWORD = 'dev'
 
 # Create the app
 app = Flask(__name__)
+# Pulls config settings from the Caps settings above.
 app.config.from_object(__name__)
 
 # Database fun
+
+# Creates the database using schema.sql
 def init_db():
 	with closing(connect_db()) as db:
 		with app.open_resource('schema.sql') as f:
@@ -36,6 +39,7 @@ def teardown_request(exception):
 
 @app.route('/')
 def home():
+	# Makes sure user is logged in before writing to db.
 	if session.get('logged_in'):
 		c = g.db.execute('select id, task from entries order by id desc')
 		entries = [dict(id=row[0], task=row[1]) for row in c.fetchall()]
