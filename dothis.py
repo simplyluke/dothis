@@ -43,6 +43,7 @@ def home():
 	if session.get('logged_in'):
 		c = g.db.execute('select id, task from entries order by id desc')
 		entries = [dict(id=row[0], task=row[1]) for row in c.fetchall()]
+		# Passes the entries to a variable that is used in the template.
 		return render_template('index.html', entries=entries)
 	else:
 		return render_template('index.html')
@@ -52,6 +53,7 @@ def home():
 def login():
 	error = None
 	if request.method == 'POST':
+		# This is like the least secure way to handle passwords.
 		if request.form['username'] != app.config['USERNAME']:
 			error = 'Invalid Username'
 		elif request.form['password'] != app.config['PASSWORD']:
@@ -69,7 +71,7 @@ def logout():
 	flash('You were logged out')
 	return redirect(url_for('home'))
 
-# Add and Remove Items
+# Add and Remove Items - /add doesn't have to be a rendered page, the form just calls it.
 @app.route('/add', methods=['POST'])
 def add_task():
 	g.db.execute('INSERT INTO entries (task) VALUES (?)', [request.form['task']])
@@ -84,5 +86,6 @@ def remove_task():
 	flash('Task removed successfully')
 	return redirect(url_for('home'))
 
+# app.run() should always be in an if __name__ = '__main__' to work well when deploying to servers.
 if __name__ == '__main__':
 	app.run()
