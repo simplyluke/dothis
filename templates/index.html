@@ -39,8 +39,6 @@
 				<hr />
 				</form>
 			</ul>
-			{% endif %}
-			{% if session.logged_in  %}
 			<form action="{{ url_for('add_task') }}" method="post" id="taskform">
 				<section id="tasksection">
 					<input type="text" name="task" placeholder="Task" id="taskinput">
